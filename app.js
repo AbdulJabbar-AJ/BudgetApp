@@ -19,10 +19,6 @@ var budgetController = (function(){
     budget: 0
   }  
   
-    
-  
-  
-  
   // All calculation functions
   // Calculate totals function
   function calcTotal(type){
@@ -33,23 +29,18 @@ var budgetController = (function(){
     data.budget = data.income.total - data.expense.total
   }
   
-  
-  
   // Calculates a value as a % of total income (just integer)
   function calcPerc(val){
     var perc = Math.round((val / data.income.total) * 100)
     return perc
   }
     
-  
   // Finds the current month
   function currentMonth(){
     var today = new Date()
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
     return months[today.getMonth()]
   }
-  
-  
   
   // Adds description, value, and totals to data
   function addData(type, desc, value, id){
@@ -75,7 +66,6 @@ var budgetController = (function(){
     }
   }
   
-  
   // Removes a complete set of data from data
   function removeData(type, id){
     for (var i = 0; i < type.id.length; i++) {
@@ -91,9 +81,6 @@ var budgetController = (function(){
     calcTotal(type)
   }
   
-  
-  
-  
   // Return Data
   return {
     data,         // I.e. data: data,
@@ -104,20 +91,6 @@ var budgetController = (function(){
     removeData
   }
 })()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -141,9 +114,6 @@ var uiController = (function(){
   }
   var data = budgetController.data
   
-  
-  
-  
   // Display starting values, including month
   function initValues(month, budget, income, expense, percent){
     domEls.month.innerText = month
@@ -151,10 +121,7 @@ var uiController = (function(){
     domEls.totInc.innerHTML = income
     domEls.totExp.innerText = expense
     domEls.totPer.innerText = percent
-    
   }
-
-
 
   // Add UI Item
   function addUIItem(type, desc, value, id){
@@ -180,7 +147,6 @@ var uiController = (function(){
         </div>
       </div>
     </div>`
-      
     
     if (type === data.income) {
       domEls.incomeList.insertAdjacentHTML('beforeend', newIncItem)
@@ -198,17 +164,13 @@ var uiController = (function(){
     // <div class="item__delete">
     //       <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
     //     </div>
-  }  
-  
+  }
   
   // Clear inputs
   function clear(){
     domEls.addDesc.value = ""
     domEls.addValue.value = ""
   }
-  
-  
-  
   
   // Take a number or a string in the form of a number, and returns a string with 2 d.p.
   // Works for negative numbers too
@@ -236,8 +198,6 @@ var uiController = (function(){
     return Number(arr[0]).toLocaleString() + appnd
   }
   
-  
-  
   // Update total income, expense, budget
   function updateUITotals(incVal, expVal){
     var sign
@@ -252,8 +212,6 @@ var uiController = (function(){
     domEls.totInc.innerText = "+ " + addDecimals(incVal)
     domEls.totExp.innerText = "- " + addDecimals(expVal)
   }  
-  
-  
   
   // Update total percentages
   function updateTotalPercentage(percentage){
@@ -271,18 +229,12 @@ var uiController = (function(){
     }
   }
   
-  
-  
   function changeColor(){
     domEls.addType.classList.toggle("exp")
     domEls.addDesc.classList.toggle("exp")
     domEls.addValue.classList.toggle("exp")
     domEls.addBtn.classList.toggle("exp")
   }
-  
-  
-  
-
   
   
   return {
@@ -298,19 +250,6 @@ var uiController = (function(){
     changeColor
   }
 })()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -355,7 +294,6 @@ var controller = (function(model, view){
     })
   }
   
-  
   // Controller Functions
   // Control input in forms
   function restrictKeys(){
@@ -384,7 +322,6 @@ var controller = (function(model, view){
   // 
   // }
   
-  
   // Update Percentages (total and individual)
   function updateUIPerc() {
     if (income.total > 0 && expense.total > 0) {
@@ -398,10 +335,6 @@ var controller = (function(model, view){
       }
     }
   }
-  
-  
-  
-
   
   // Push data to M & V for update
 
@@ -426,7 +359,6 @@ var controller = (function(model, view){
       view.clear()  
     }
     
-    
     // Delete items     "income" "0"
     function removeItem(type, id){
       // Arguments correctly:
@@ -448,17 +380,12 @@ var controller = (function(model, view){
       
     }
     
-  
-  
   function acceptInput(){
     if (DOM.addDesc.value !== "" && DOM.addValue.value !== "" && DOM.addValue.value > 0 ) {
       return addItem(checkInputType(),inputDesc.value, inputVal.value)
     }
   }
-  
-  
-  
-  
+
   
   // Initialisation 
   return {
