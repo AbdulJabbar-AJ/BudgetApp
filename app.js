@@ -17,8 +17,8 @@ var budgetController = (function(){
       totalPerc: 0
     },
     budget: 0
-  }  
-  
+  }
+
   // All calculation functions
   // Calculate totals function
   function calcTotal(type){
@@ -28,20 +28,20 @@ var budgetController = (function(){
     }
     data.budget = data.income.total - data.expense.total
   }
-  
+
   // Calculates a value as a % of total income (just integer)
   function calcPerc(val){
     var perc = Math.round((val / data.income.total) * 100)
     return perc
   }
-    
+
   // Finds the current month
   function currentMonth(){
     var today = new Date()
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ]
     return months[today.getMonth()]
   }
-  
+
   // Adds description, value, and totals to data
   function addData(type, desc, value, id){
     type.desc.push(desc)
@@ -49,10 +49,10 @@ var budgetController = (function(){
     type.id.push(id)
     calcTotal(type)
   }
-  
+
   // Adds percentage and total percentage data to expenses
   function updatePercData(){
-    var vals = data.expense      
+    var vals = data.expense
     if (vals.total > 0 && data.income.total > 0) {
       vals.totalPerc = calcPerc(vals.total)
       for (var i = 0; i < vals.val.length; i++) {
@@ -62,10 +62,10 @@ var budgetController = (function(){
       vals.totalPerc = 0
       for (var i = 0; i < vals.val.length; i++) {
         vals.perc[i] = 0
-      }    
+      }
     }
   }
-  
+
   // Removes a complete set of data from data
   function removeData(type, id){
     for (var i = 0; i < type.id.length; i++) {
@@ -80,7 +80,7 @@ var budgetController = (function(){
     }
     calcTotal(type)
   }
-  
+
   // Return Data
   return {
     data,         // I.e. data: data,
@@ -113,7 +113,7 @@ var uiController = (function(){
     container: document.querySelector('.container')
   }
   var data = budgetController.data
-  
+
   // Display starting values, including month
   function initValues(month, budget, income, expense, percent){
     domEls.month.innerText = month
@@ -125,57 +125,57 @@ var uiController = (function(){
 
   // Add UI Item
   function addUIItem(type, desc, value, id){
-    var newIncItem = 
+    var newIncItem =
     `<div class="item clearfix"  id="income-${id}">
       <div class="item__description">${desc}</div>
       <div class="right clearfix">
         <div class="item__value">+ ${addDecimals(value)}</div>
         <div class="item__delete">
-          <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+          <button class="item__delete--btn"><ion-icon name="ios-close"></ion-icon></button>
         </div>
       </div>
     </div>`
-    
-    var newExpItem = 
+
+    var newExpItem =
     `<div class="item clearfix"  id="expense-${id}">
       <div class="item__description">${desc}</div>
       <div class="right clearfix">
         <div class="item__value">- ${addDecimals(value)}</div>
         <div class="item__percentage">---</div>
         <div class="item__delete">
-          <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+          <button class="item__delete--btn"><ion-icon name="ios-close"></ion-icon></button>
         </div>
       </div>
     </div>`
-    
+
     if (type === data.income) {
       domEls.incomeList.insertAdjacentHTML('beforeend', newIncItem)
     } else if (type === data.expense) {
       domEls.expenseList.insertAdjacentHTML('beforeend', newExpItem)
     }
-  }  
-  
+  }
+
   // Remove UI item
   function removeUIItem(type, id){
     var item = document.getElementById(`${type}-${id}`)
     console.log(item);
     item.parentNode.removeChild(document.getElementById(`${type}-${id}`))
-    
+
     // <div class="item__delete">
-    //       <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+    //       <button class="item__delete--btn"><ion-icon name="ios-close"></ion-icon></button>
     //     </div>
   }
-  
+
   // Clear inputs
   function clear(){
     domEls.addDesc.value = ""
     domEls.addValue.value = ""
   }
-  
+
   // Take a number or a string in the form of a number, and returns a string with 2 d.p.
   // Works for negative numbers too
   function addDecimals(val){
-    var arr, appnd 
+    var arr, appnd
     arr = String(val).split('.')
     if (arr[1]) { // If there are any decimals
       if (arr[1].length === 1) { // If 1 decimal
@@ -197,7 +197,7 @@ var uiController = (function(){
     }
     return Number(arr[0]).toLocaleString() + appnd
   }
-  
+
   // Update total income, expense, budget
   function updateUITotals(incVal, expVal){
     var sign
@@ -211,32 +211,32 @@ var uiController = (function(){
     domEls.budget.innerText = sign + budget
     domEls.totInc.innerText = "+ " + addDecimals(incVal)
     domEls.totExp.innerText = "- " + addDecimals(expVal)
-  }  
-  
+  }
+
   // Update total percentages
   function updateTotalPercentage(percentage){
     domEls.totPer.innerText = percentage + "%"
   }
-  
+
   // Update individual item percentages
   function updateItemPercentages(id,i){
     // console.log(id,i)
     var item = document.getElementById(`expense-${id}`).querySelector('.item__percentage')
     if (data.income.total > 0) {
-      item.innerText = `${data.expense.perc[i]}%` 
+      item.innerText = `${data.expense.perc[i]}%`
     } else {
-      item.innerText = `---` 
+      item.innerText = `---`
     }
   }
-  
+
   function changeColor(){
     domEls.addType.classList.toggle("exp")
     domEls.addDesc.classList.toggle("exp")
     domEls.addValue.classList.toggle("exp")
     domEls.addBtn.classList.toggle("exp")
   }
-  
-  
+
+
   return {
     domEls,
     initValues,
@@ -246,7 +246,7 @@ var uiController = (function(){
     addDecimals,
     updateUITotals,
     updateTotalPercentage,
-    updateItemPercentages,    
+    updateItemPercentages,
     changeColor
   }
 })()
@@ -263,10 +263,10 @@ var controller = (function(model, view){
   var inputVal = DOM.addValue
   var income = data.income
   var expense = data.expense
-  
+
   // Set up event listeners
   var setupEventListeners = function(){
-    
+
     // Test to check if both cells are valid and submits
     DOM.addBtn.addEventListener('click', acceptInput)
 
@@ -276,13 +276,13 @@ var controller = (function(model, view){
         acceptInput()
       }
     })
-    
+
     // Listens for bad keys
     inputVal.addEventListener('keypress', restrictKeys)
-    
+
     // Chanes on focus border color
     DOM.addType.addEventListener('change', view.changeColor)
-   
+
     // Listens for bad keys
     DOM.container.addEventListener('click', function(){
       var a = event.target.parentNode
@@ -293,7 +293,7 @@ var controller = (function(model, view){
       }
     })
   }
-  
+
   // Controller Functions
   // Control input in forms
   function restrictKeys(){
@@ -306,7 +306,7 @@ var controller = (function(model, view){
       event.preventDefault()
     }
   }
-  
+
   // checks for income or expense
   function checkInputType(){
     var type
@@ -316,12 +316,12 @@ var controller = (function(model, view){
       return type = expense
     }
   }
-  
+
   // checks for income or expense
   // function checkRemoveTyp(type){
-  // 
+  //
   // }
-  
+
   // Update Percentages (total and individual)
   function updateUIPerc() {
     if (income.total > 0 && expense.total > 0) {
@@ -335,7 +335,7 @@ var controller = (function(model, view){
       }
     }
   }
-  
+
   // Push data to M & V for update
 
     // Add new items
@@ -351,14 +351,14 @@ var controller = (function(model, view){
       // Update data
       model.addData(type, desc, val, id)
       model.updatePercData()
-      
+
       // Update UI
       view.addUIItem(type, desc, val, id)
       view.updateUITotals(income.total, expense.total)
       updateUIPerc()
-      view.clear()  
+      view.clear()
     }
-    
+
     // Delete items     "income" "0"
     function removeItem(type, id){
       // Arguments correctly:
@@ -368,26 +368,26 @@ var controller = (function(model, view){
       } else if (type === "expense") {
         var ty = data.expense
       }
-      
+
       // Update data
       model.removeData(ty, Number(id))
       model.updatePercData()
-      
+
       // // update UI
       view.removeUIItem(type, id)
       view.updateUITotals(income.total, expense.total)
       updateUIPerc()
-      
+
     }
-    
+
   function acceptInput(){
     if (DOM.addDesc.value !== "" && DOM.addValue.value !== "" && DOM.addValue.value > 0 ) {
       return addItem(checkInputType(),inputDesc.value, inputVal.value)
     }
   }
 
-  
-  // Initialisation 
+
+  // Initialisation
   return {
     init: function(){
       setupEventListeners()
